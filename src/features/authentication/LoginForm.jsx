@@ -1,0 +1,118 @@
+import { useState } from "react";
+import Button from "../../ui/Button";
+import Form from "../../ui/Form";
+import Input from "../../ui/Input";
+import FormRowVertical from "../../ui/FormRowVertical";
+import { useLogin } from "./useLogin";
+import SpinnerMini from "../../ui/SpinnerMini";
+
+function LoginForm() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { login, isLogin } = useLogin();
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (!email || !password) return;
+    login(
+      { email, password },
+      {
+        onSettled: () => {
+          setEmail("");
+          setPassword("");
+        },
+      }
+    );
+  }
+
+  return (
+    <Form onSubmit={handleSubmit}>
+      <FormRowVertical label="Email address">
+        <Input
+          type="email"
+          id="email"
+          // This makes this form better for password managers
+          autoComplete="username"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          disabled={isLogin}
+        />
+      </FormRowVertical>
+      <FormRowVertical label="Password">
+        <Input
+          type="password"
+          id="password"
+          autoComplete="current-password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          disabled={isLogin}
+        />
+      </FormRowVertical>
+      <FormRowVertical>
+        <Button size="large" disabled={isLogin}>
+          {!isLogin ? "Log in" : <SpinnerMini />}
+        </Button>
+      </FormRowVertical>
+    </Form>
+  );
+}
+
+export default LoginForm;
+
+// import { useState } from "react";
+// import Button from "../../ui/Button";
+// import Form from "../../ui/Form";
+// import Input from "../../ui/Input";
+// import FormRowVertical from "../../ui/FormRowVertical";
+// import { login } from "../../services/apiauth";
+
+// function LoginForm() {
+//   const [email, setEmail] = useState("");
+//   const [password, setPassword] = useState();
+
+//   async function handleSubmit(e) {
+//     e.preventDefault();
+//     if (!email || !password) return;
+//     try {
+//       const userData = await login({ email, password });
+//       // Do something with the user data, such as redirecting to another page
+//       console.log("Login successful:", userData);
+//     } catch (error) {
+//       console.error("Error during login:", error.message);
+//       // Handle the error, such as displaying an error message to the user
+//     }
+//   }
+
+//   return (
+//     <Form onSubmit={handleSubmit}>
+//       {" "}
+//       {/* Remove the parentheses */}
+//       <FormRowVertical label="Email address">
+//         <Input
+//           type="email"
+//           id="email"
+//           autoComplete="username"
+//           value={email}
+//           onChange={(e) => setEmail(e.target.value)}
+//         />
+//       </FormRowVertical>
+//       <FormRowVertical label="Password">
+//         <Input
+//           type="password"
+//           id="password"
+//           autoComplete="current-password"
+//           value={password}
+//           onChange={(e) => setPassword(e.target.value)}
+//         />
+//       </FormRowVertical>
+//       <FormRowVertical>
+//         <Button type="submit" size="large">
+//           Login
+//         </Button>{" "}
+//         {/* Specify type="submit" */}
+//       </FormRowVertical>
+//     </Form>
+//   );
+// }
+
+// export default LoginForm;
